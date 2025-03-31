@@ -117,28 +117,34 @@ class WebScraper:
         return parsed.netloc and parsed.scheme in ('http', 'https')
 
     def generate_summary(self, title: str, content: str):
-        query = f"""# Role: Context-Aware Webpage Summarizer
-            Your task is to generate a concise, accurate summary of markdown-formatted content while **critically evaluating** whether the page title aligns with the content\n\n.
+        query = f"""# Role: Context-Aware Webpage Summarizer  
+            Task: Generate a summary and keywords, dynamically referencing the title **only if it aligns with the content**.
 
             **Webpage Content**:
             - Title: {title}
-            - Content (markdown-like syntax): {content}
+            - Content (markdown syntax): {content}
 
-            \n\n# Rules
-            1. **Summary Guidelines**:
-            - Prioritize claims, definitions, processes, or unique insights.
-            - For technical guides: Highlight steps/tools.
-            - For policies: Extract rules/requirements.
-            - **Keywords**: Include proper nouns, tools, or concepts (e.g., "Docker", "GDPR compliance").
+            **Rules**:  
+            1. **Title Handling**:  
+            - If the title is irrelevant to the content (e.g., mismatch), treat it as `null` and **omit it from the summary**.  
+            - If the title is relevant, use it to contextualize the summary (e.g., "The page [Title] discusses...").  
 
-            2. **Output Requirements**:
-            - Return a JSON object with:
-                ```json
-                {{
-                "summary": "1-2 sentences describing the page's purpose and primary topics.",
-                "keywords": ["list", "of", "5-10", "key", "terms"],
-                }}
-                ```
+            2. **Summary**:  
+            - 1-2 sentences describing the content's core focus.  
+            - **Phrasing logic**:  
+                - Title used ➔ "The page [Title] [verb] [topic]..." (e.g., "explores", "explains", "analyzes") 
+                - Title omitted ➔ Use a generic opener (e.g., "The page discusses...")  
+            - Prioritize claims, processes, or critical insights.  
+
+            3. **Keywords**:  
+            - 5-10 case-sensitive terms (prioritize proper nouns, tools, concepts).  
+            - Exclude generic terms (e.g., "guide," "article").  
+
+            **Output**: JSON format:  
+            {{  
+            "summary": "[Title-aware or generic summary]",  
+            "keywords": ["Term1", "Term2"],  
+            }}  
             """
         payload = json.dumps({"model": "mistral-small:24b-instruct-2501-fp16", "temperature": 0, "messages": [{"role": "user", "content": query}], "stream": False })
         response = requests.post(f"{os.getenv('OLLAMA_URL')}", data=payload, headers={"Content-type": "application/json"})
