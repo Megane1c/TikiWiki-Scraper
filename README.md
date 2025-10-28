@@ -17,10 +17,11 @@ This repository contains a web scraper designed to extract content from a knowle
 ### Environment
 - A running instance of [Meilisearch](https://www.meilisearch.com/)
 - An `.env` file containing:
-  - `BASE_URL` 
+  - `BASE_URL` for the tiki-wiki URL
   - `MEILISEARCH_URL` 
   - `ADMIN_KEY` for Meilisearch if you implemented the MASTER_KEY 
   - `OLLAMA_URL` to use Ollama's API for summarizing web content
+  - `TIKI_PAGES` location of pages (e.g. https://<your-tiki-page>/tiki-listpages.php"
 
 ## Installation
 1. Clone the repository
