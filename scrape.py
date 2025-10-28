@@ -770,7 +770,7 @@ class WebScraper:
             }
 
             # Index update time
-            doc_data["indexed_at"]: datetime.datetime.now().isoformat()
+            doc_data["indexed_at"] = datetime.datetime.now().isoformat()
             
             # Check for existing document
             search_response = requests.post(

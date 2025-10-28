@@ -26,10 +26,12 @@ HEADERS = {
 }
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+tiki_link = os.path.join(BASE_DIR, "tiki_pages")
+os.makedirs(tiki_link, exist_ok=True)
 
 # File paths for caching results
-VALID_FILE = os.path.join(BASE_DIR, "kbase_pages", "valid_links.txt")
-INVALID_FILE = os.path.join(BASE_DIR, "kbase_pages", "invalid_links.txt")
+VALID_FILE = os.path.join(tiki_link, "valid_links.txt")
+INVALID_FILE = os.path.join(tiki_link, "invalid_links.txt")
 
 # Load existing valid and invalid links
 def load_checked_links():
